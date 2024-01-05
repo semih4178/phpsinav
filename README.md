@@ -1,8 +1,9 @@
+
 ## PHP YAZILI 1:2
 
 > Database oluşturma kısımları lazımsa 'dubayok.md' dosyasına ulaşın. !buyuk ihtimalle amiguzelin icinde
 
-#### Database Bağlantısı 
+## Database Bağlantısı 
 **baglanti.php** dosyası oluşturun devamında içine bunları yazın
 ```php
 <?php
@@ -21,7 +22,7 @@ if ($conn->connect_error) {
 ?>
 
 ```
-#### Veri Ekleme !!!Fotografsiz!!!
+## Veri Ekleme !!!Fotografsiz!!!
 **index.php** dosyasinin form kismi:
 ```html
 <form action="ekle.php" method="post">
@@ -63,7 +64,7 @@ $conn->close();
 
 
 ```
-#### Veri Listeleme
+## Veri Listeleme
 **index.php** dosyasinda verilerin yazilacigi bolume ekleyin
 ***!!!!!!!!Tablo adina dikkat edin!!!!!!! (Ornekteki tablo adi 'kullanicilar')***
 ```php
@@ -86,7 +87,7 @@ $conn->close();
 ?>
 
 ```
-#### İd İle Belirli Bir Veri Çekme
+## İd İle Belirli Bir Veri Çekme
 **detay.php** sayfasi icin
 ```php
 <?php
@@ -110,4 +111,93 @@ $conn->close();
 ?>
 ```
 
->bu surum versiyon 1.0 bunu okuyanin ta amina cakayim ben the enes ad(m)iguzel
+
+## Veri Ekleme !!!Fotolu!!!
+**index.php** dosyasinin form kismi:
+```html
+<form action="ekle.php" method="post">
+  <label for="ad">Ad:</label> 
+  <input type="text" id="ad" name="ad" required>
+    <br>
+  <label for="soyad">Soyad:</label>
+  <input type="text" id="soyad" name="soyad" required>
+   <br>  
+  <label for="resim">Resim:</label>  
+  <input type="file" id="resim" name="image" required>  
+  <br>  
+  <input type="submit" value="Gönder">  
+</form>
+```
+resimin nameini değiştirmeyin "image" olarak kalsın
+
+**ekle.php** dosyasinin icerigi:
+```php
+<?php
+
+require  "connect.php";
+
+if (isset($_FILES['image'])){
+
+$boyut = $_FILES['image']['size'];
+
+if ($boyut > (1024*1024 * 2)){
+
+echo  "<script>alert('resim 2mb den büyük olamaz')</script>";
+
+}else{
+
+$tip = $_FILES['image']['type'];
+
+$resAdi = $_FILES['image']['name'];
+
+  
+
+$uzantisi = explode('.',$resAdi);
+
+$uzantisi = $uzantisi[count($uzantisi) -1];
+
+  
+
+$yeniAdi = "uploads/".  time() .  "."  .  $uzantisi;
+
+  
+
+if($tip == 'image/jpeg' or $tip == "image/png" or $tip == "image/jpg"){
+
+if (move_uploaded_file($_FILES['image']['tmp_name'],$yeniAdi)){
+
+echo  "resim başarıyla yüklendi";
+
+$sql = "INSERT INTO `kitap`(`adi`, `sayfa`, `kategori`, `yazari`, `resim`) VALUES ('".$_POST['name']."','".$_POST['page']."','".$_POST['category']."','".$_POST['author']."','".$yeniAdi."')";
+
+  
+
+if ($conn->query($sql) === TRUE) {
+
+echo  "<script>alert('kayidunuz basariyla eklenmistur');history.back()</script>";
+
+} else {
+
+echo  "Error: "  .  $sql  .  "<br>"  .  $conn->error;
+
+}
+
+} else  "resim yüklenemedi.";
+
+}else{
+
+echo  "sadece jpeg veya png dosyalrını gönderebilrisiinz ";
+
+}
+
+}
+
+}
+```
+**Veritabnında resimin tutulucağı kolon "text" türünde olmalı.**
+**SQL cümlesi ile veritabınına giden resim verisi $yeniAdi olmalıdır.**
+** proje dizininde kesinlik ve kesinlik "uploads" klasörü bulunmalıdır kullancıcı tarafıondan eklenen veriler oraya gelir.**
+
+>bu surum versiyon 1.1 bunu okuyanin ta amina cakayim ben the enes ad(m)iguzel; 
+# 😟😛👣  💩
+kerem aydın maldır
